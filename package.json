@@ -14,7 +14,11 @@
     "update": "node update-system.mjs apply",
     "rollback": "node update-system.mjs rollback",
     "liveness": "node check-liveness.mjs",
-    "scan": "node scan.mjs"
+    "scan": "node scan.mjs",
+    "web:dev": "pnpm --filter @career-ops/web dev",
+    "web:build": "pnpm --filter @career-ops/core build && pnpm --filter @career-ops/web build",
+    "web:typecheck": "pnpm --filter @career-ops/core build && pnpm --filter @career-ops/web typecheck",
+    "core:build": "pnpm --filter @career-ops/core build"
   },
   "keywords": [
     "ai",

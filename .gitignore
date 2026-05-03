@@ -38,3 +38,16 @@ bun.lock
 career-dashboard
 package-lock.json
 cv.md
+
+# Web app workspace
+apps/web/.next
+apps/web/.vercel
+apps/web/.env
+apps/web/.env.local
+apps/web/.env.*.local
+apps/web/next-env.d.ts
+apps/web/prisma/migrations/migration_lock.toml
+packages/*/dist
+packages/*/.tsbuildinfo
+pnpm-lock.yaml
+.turbo

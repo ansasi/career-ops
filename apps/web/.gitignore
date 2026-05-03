@@ -1,0 +1,10 @@
+node_modules
+.next
+.vercel
+.env
+.env.local
+.env.*.local
+next-env.d.ts
+prisma/migrations/migration_lock.toml
+*.tsbuildinfo
+*.log

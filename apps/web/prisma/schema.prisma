@@ -1,0 +1,191 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id                 String    @id @default(cuid())
+  email              String    @unique
+  emailVerified      DateTime?
+  name               String?
+  image              String?
+  passwordHash       String?
+  stripeCustomerId   String?   @unique
+  subscriptionStatus String    @default("inactive")
+  createdAt          DateTime  @default(now())
+
+  accounts Account[]
+  sessions Session[]
+  profile  Profile?
+  cvs      CV[]
+  evals    JobEvaluation[]
+  apps     Application[]
+  reports  Report[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Profile {
+  userId         String   @id
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName       String
+  headline       String?
+  countries      String[]
+  languages      String[]
+  archetypes     Json
+  keywordsPos    String[]
+  keywordsNeg    String[]
+  compTarget     String?
+  rawYaml        Json
+  preferredModel String?
+  updatedAt      DateTime @updatedAt
+}
+
+model CV {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label     String   @default("default")
+  markdown  String   @db.Text
+  isDefault Boolean  @default(true)
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Job {
+  id          String    @id @default(cuid())
+  url         String    @unique
+  source      String
+  company     String
+  title       String
+  country     String?
+  location    String?
+  rawJson     Json?
+  jdText      String?   @db.Text
+  firstSeenAt DateTime  @default(now())
+  liveness    String    @default("uncertain")
+  livenessAt  DateTime?
+  postedAt    DateTime?
+
+  evals JobEvaluation[]
+  apps  Application[]
+
+  @@index([country, title])
+  @@index([firstSeenAt])
+}
+
+model JobEvaluation {
+  id         String   @id @default(cuid())
+  userId     String
+  jobId      String
+  status     String   @default("queued")
+  score      Float?
+  archetype  String?
+  legitimacy String?
+  reportId   String?  @unique
+  createdAt  DateTime @default(now())
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  job    Job     @relation(fields: [jobId], references: [id])
+  report Report? @relation("EvalReport", fields: [reportId], references: [id])
+
+  @@unique([userId, jobId])
+  @@index([userId, status])
+}
+
+model Report {
+  id           String   @id @default(cuid())
+  userId       String
+  jobId        String
+  evaluationId String?  @unique
+  markdown     String   @db.Text
+  blocks       Json
+  modelUsed    String
+  createdAt    DateTime @default(now())
+
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  evaluation JobEvaluation? @relation("EvalReport")
+
+  @@index([userId, jobId])
+}
+
+model Application {
+  id        String    @id @default(cuid())
+  userId    String
+  jobId     String
+  status    String    @default("evaluated")
+  appliedAt DateTime?
+  notes     String?   @db.Text
+  pdfUrl    String?
+  reportId  String?
+
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  job       Job        @relation(fields: [jobId], references: [id])
+  followUps FollowUp[]
+
+  @@unique([userId, jobId])
+  @@index([userId, status])
+}
+
+model FollowUp {
+  id            String      @id @default(cuid())
+  applicationId String
+  dueAt         DateTime
+  doneAt        DateTime?
+  channel       String
+  notes         String?
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([applicationId, dueAt])
+}
+
+model ScanRun {
+  id         String    @id @default(cuid())
+  startedAt  DateTime  @default(now())
+  finishedAt DateTime?
+  found      Int       @default(0)
+  added      Int       @default(0)
+  errors     Json?
+  trigger    String
+}
