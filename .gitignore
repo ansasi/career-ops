@@ -22,8 +22,15 @@ writing-samples/*
 
 # User config and customization (never auto-updated)
 config/profile.yml
+config/_profile.md
 portals.yml
 modes/_profile.md
+
+# Personal data extras
+data/follow-ups.md
+data/applications.md.bak
+interview-prep/*.md
+!interview-prep/story-bank.md
 .update-dismissed
 .update-lock
 
