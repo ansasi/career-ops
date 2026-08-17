@@ -9,8 +9,8 @@
  * your portals.yml `title_filter` / `location_filter` — no manual company
  * curation needed.
  *
- * Company directories come from the public job-board-aggregator dataset
- * (github.com/Feashliaa/job-board-aggregator), cached in data/cache/ for 24h.
+ * Company directories come from the board-mix dataset
+ * (github.com/ansasi/board-mix), cached in data/cache/ for 24h.
  *
  * Zero LLM tokens — pure HTTP + JSON, same providers/ modules as scan.mjs.
  * Postings without a usable publish date are skipped: a reverse scan is only
@@ -59,7 +59,7 @@ const CACHE_TTL_HOURS = 24;
 // before interpolation, and entryOnHost (below) re-parses each finished
 // careers_url and drops anything that doesn't resolve to the ATS's own host —
 // so a tampered dataset can at worst name boards that don't exist.
-const DATASET_BASE = 'https://raw.githubusercontent.com/Feashliaa/job-board-aggregator/main/data';
+const DATASET_BASE = 'https://raw.githubusercontent.com/ansasi/board-mix/main/data';
 const CONCURRENCY = 20;
 // A refusing resolver fails every lookup in milliseconds, so a sweep that
 // keeps going just feeds it (#2229). Stop after this many consecutive
