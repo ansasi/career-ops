@@ -67,7 +67,7 @@ export function TriageRow({
       <CompanyLogo name={job.company} size={20} />
 
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm">
+        <p className="line-clamp-2 text-sm sm:truncate">
           <span className="font-medium text-foreground">{job.company}</span>
           <span className="text-muted"> · {job.role}</span>
         </p>

@@ -141,7 +141,7 @@ export function PipelineView({
       </div>
 
       {/* tabs */}
-      <div className="mt-6 flex flex-wrap gap-1 border-b border-border">
+      <div className="mt-6 flex gap-1 overflow-x-auto border-b border-border">
         {TABS.map((t) => {
           const count =
             t === "INBOX"
@@ -154,7 +154,7 @@ export function PipelineView({
               key={t}
               onClick={() => setParams({ tab: t === "INBOX" ? null : t })}
               className={cn(
-                "-mb-px inline-flex items-center justify-center border-b-2 px-3 py-2 text-xs font-medium transition-colors max-sm:min-h-[44px]",
+                "-mb-px inline-flex shrink-0 items-center justify-center gap-1 whitespace-nowrap border-b-2 px-3 py-2 text-xs font-medium transition-colors max-sm:min-h-[44px]",
                 tab === t
                   ? "border-brand text-foreground"
                   : "border-transparent text-muted hover:text-foreground",
