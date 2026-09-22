@@ -14,3 +14,9 @@ next-env.d.ts
 
 # agent session memory — internal notes, never in the public repo
 .claude/
+
+# Written by `next dev` (Next.js 16.3+ agent rules) on every start — generated
+# per machine, not project instructions. Set `agentRules: false` in
+# next.config.mjs to stop generating them.
+/AGENTS.md
+/CLAUDE.md
